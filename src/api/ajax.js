@@ -5,19 +5,19 @@
 **/ 
 import axios from 'axios';
 export default function ajax(url,data={},type='GET'){
-    return new Promise((resolve,reject)=>{
+    return new Promise(function(resolve,reject){
         // 执行异步ajax请求 
         let promise
         if(type === 'GET'){
-            let data = ''; //数据拼接字符串
+            let newData = ''; //数据拼接字符串
             // 遍历请求参数
-            Object.keys(params).forEach(key =>{
-                data += key + '=' + data[key] + '&'
+            Object.keys(data).forEach(key =>{
+                newData += key + '=' + data[key] + '&';
             })
             // 如果没有参数
-            if(data !== ''){
-                data = data.substring(0,data.lastIndexOf('&'));
-                url = url + '?' + data;
+            if(newData !== ''){
+                newData = newData.substring(0,newData.lastIndexOf('&'));
+                url = url + '?' + newData;
             }
             // 发送get请求
             promise = axios.get(url);
@@ -27,11 +27,11 @@ export default function ajax(url,data={},type='GET'){
         }
         promise
             // 成功后调用resolve
-            .then((response)=>{
+            .then(function(response){
                 resolve(response.data)
-            }).
+            })
             // 失败后调用reject
-            catch((error)=>{
+            .catch(function(error){
                 reject(error)
             })     
     })

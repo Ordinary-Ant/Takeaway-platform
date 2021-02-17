@@ -25,3 +25,5 @@
 
 ## App.vue 应用根组件
 ## main.js 入口js
+
+## 启用打包可视化：npm run build --report
