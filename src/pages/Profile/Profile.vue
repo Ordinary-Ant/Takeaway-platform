@@ -95,32 +95,31 @@
 </template>
 
 <script>
-import HeaderTop from '../../components/HeaderTop/HeaderTop';
-import {mapState} from 'vuex';
-import {MessageBox,Toast} from 'mint-ui';
+import HeaderTop from '../../components/HeaderTop/HeaderTop'
+import {mapState} from 'vuex'
+import {MessageBox, Toast} from 'mint-ui'
 export default {
-    components:{
-        HeaderTop
-    },
-    computed:{
-      ...mapState(['userInfo'])
-
-    },
-    methods:{
-      logout(){
-        MessageBox.confirm('確認要推出嗎？').then(
-          // 點擊確認
-          action=>{
-            this.$store.dispatch('logout');
-            Toast('登出成功');
-          },
-          // 點擊取消
-          esc=>{
-            console.log('取消了');
-          }
-        )
-      }
+  components: {
+    HeaderTop
+  },
+  computed: {
+    ...mapState(['userInfo'])
+  },
+  methods: {
+    logout () {
+      MessageBox.confirm('確認要推出嗎？').then(
+        // 點擊確認
+        action => {
+          this.$store.dispatch('logout')
+          Toast('登出成功')
+        },
+        // 點擊取消
+        esc => {
+          console.log('取消了')
+        }
+      )
     }
+  }
 }
 </script>
 

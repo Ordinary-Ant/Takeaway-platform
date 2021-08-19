@@ -1,7 +1,7 @@
 <template>
   <div class="shop_container">
     <ul class="shop_list" v-if="shops.length">
-      <li class="shop_li border-1px" v-for="(shop,index) in shops" @click="$router.push('/shop')">
+      <li class="shop_li border-1px" v-for="shop in shops" :key="shop.id" @click="$router.push('/shop')">
         <a>
           <div class="shop_left">
             <img class="shop_img" :src="shop.image_path" />
@@ -10,7 +10,7 @@
             <section class="shop_detail_header">
               <h4 class="shop_title ellipsis">{{shop.name}}</h4>
               <ul class="shop_detail_ul">
-                <li class="supports" v-for="(support,index) in shop.supports">{{support.icon_name}}</li>
+                <li class="supports" v-for="(support,index) in shop.supports" :key="index">{{support.icon_name}}</li>
               </ul>
             </section>
             <section class="shop_rating_order">
@@ -35,7 +35,7 @@
       </li>
     </ul>
     <ul v-else>
-      <li v-for="shop in 6">
+      <li v-for="index in 6"  :key="index">
         <img src="./images/shop_back.svg" alt="back"/>
       </li>
     </ul>
@@ -43,16 +43,16 @@
 </template>
 
 <script>
-import { mapState } from "vuex";
-import Star from '../Star/Star';
+import { mapState } from 'vuex'
+import Star from '../Star/Star'
 export default {
   computed: {
-    ...mapState(["shops"]),
+    ...mapState(['shops'])
   },
-  components:{
+  components: {
     Star
   }
-};
+}
 </script>
 
 <style>

@@ -10,15 +10,15 @@
 
 <script>
 export default {
-    props:{ 
-        food:Object
-    },
-    methods:{
-        updateFoodCount(isAdd){
-            this.$store.dispatch('updateFoodCount',{isAdd,food:this.food});
-        }
+  props: {
+    food: Object
+  },
+  methods: {
+    updateFoodCount (isAdd) {
+      this.$store.dispatch('updateFoodCount', { isAdd, food: this.food })
     }
-};
+  }
+}
 </script>
 
 <style lang="stylus" rel="stylesheet/stylus">

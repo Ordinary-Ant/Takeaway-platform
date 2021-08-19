@@ -2,7 +2,7 @@
     <section class="loginContainer">
       <div class="loginInner">
         <div class="login_header">
-          <h2 class="login_logo">硅谷外卖</h2>
+          <h2 class="login_logo">美团外卖</h2>
           <div class="login_header_title">
             <a href="javascript:;" :class="{on:loginWay}" @click="loginWay = true">短信登录</a>
             <a href="javascript:;" :class="{on:!loginWay}" @click="loginWay = false">密码登录</a>
@@ -13,9 +13,9 @@
             <div :class="{on:loginWay}">
               <section class="login_message">
                 <input type="tel" maxlength="11" placeholder="手机号" v-model="phone">
-                <button 
-                  :disabled="!rightPhone" 
-                  class="get_verification" 
+                <button
+                  :disabled="!rightPhone"
+                  class="get_verification"
                   :class="{right_phone:rightPhone}"
                   @click.prevent="getCode">{{computeTime ? `已发送(剩余${computeTime}s)`:'获取验证码'}}</button>
               </section>
@@ -23,7 +23,7 @@
                 <input type="tel" maxlength="8" placeholder="验证码" v-model="code">
               </section>
               <section class="login_hint">
-                温馨提示：未注册硅谷外卖帐号的手机号，登录时将自动注册，且代表已同意
+                温馨提示：未注册美团外卖帐号的手机号，登录时将自动注册，且代表已同意
                 <a href="javascript:;">《用户服务协议》</a>
               </section>
             </div>
@@ -42,8 +42,8 @@
                 </section>
                 <section class="login_message">
                   <input type="text" maxlength="11" placeholder="验证码" v-model="captcha">
-                  <img class="get_verification" 
-                  src="http://localhost:4000/captcha" 
+                  <img class="get_verification"
+                  src="http://47.243.23.88:4000/captcha"
                   alt="captcha"
                   @click="getCaptcha"
                   ref="captcha">
@@ -63,136 +63,136 @@
 </template>
 
 <script>
-import AlertTip from '../../components/AlertTip/AlertTip.vue';
-import {reqPwdLogin, reqSendCode, reqSmsLogin} from '../../api/index'; 
+import AlertTip from '../../components/AlertTip/AlertTip.vue'
+import { reqPwdLogin, reqSendCode, reqSmsLogin } from '../../api/index'
 export default {
-    data(){
-      return{
-        loginWay:true, //true为短信，false为密码
-        phone:'', //手机号
-        computeTime:0, //倒计时时间
-        showPWD:false, //是否显示密码
-        pwd:'', //密码
-        code:'', //短信验证码 
-        name:'', //用户名
-        captcha:'', //图片验证码
-        alertText:'', //提示信息
-        showAlert:false //是否显示提示
-      }
-    },
-    computed:{
-      rightPhone(){
-        return /^1\d{10}$/.test(this.phone);
-      }
-    },
-    methods:{
-        // 回退功能
-        goback(){
-            this.$router.back();
-        },
-
-        // 异步获取验证码功能
-        async getCode(){
-          // 当前没有开始计时
-          if(!this.computeTime){
-            // 启动倒计时
-            this.computeTime = 30
-            this.intervalID = setInterval(() => {
-              this.computeTime--;
-              if(this.computeTime <= 0){
-                clearInterval(this.intervalID)
-              }
-            }, 1000);
-          // 发送请求
-            const result = await reqSendCode(this.phone);
-            if(result.code === 1){
-              // 顯示提示
-              this.showAlertText(result.msg);
-              // 停止計時
-              if(this.computeTime){
-                this.computeTime = 0;
-                clearInterval(this.intervalID);
-              }
-            }
-          }
-        },
-
-        // 验证方法
-        showAlertText(alertText){
-          this.showAlert = true;
-          this.alertText = alertText;
-        },
-        // 异步登录并验证表单数据
-        async login(){
-          let result;
-          // 判断登录方式
-          if(this.loginWay){ //短信
-            const {rightPhone,phone,code} = this;
-            if(!rightPhone){
-              // 手机号不正确
-              this.showAlertText('手机号不正确');
-              return
-            }else if(!/^\d{6}$/.test(code)){
-              // 验证码必须为6位数字
-              this.showAlertText('验证码必须为6位数字');
-              return
-            }
-            // 發送ajax請求短信登陸
-            result = await reqSmsLogin(phone,code);
-          }else{ //密码
-            const {name,pwd,captcha} = this;
-            if(!name){
-              // 用户名不能为空
-              this.showAlertText('用户名不能为空');
-              return
-            }else if(!pwd){
-              // 密码不能为空
-              this.showAlertText('密码不能为空');
-              return
-            }else if(!captcha){
-              // 验证码不能为空
-              this.showAlertText('验证码不能为空');
-              return
-            }
-            // 發送ajax請求驗證碼登陸
-            result = await reqPwdLogin({name,pwd,captcha});
-          }
-          // 停止計時
-          if(this.computeTime){
-            this.computeTime = 0;
-            clearInterval(this.intervalID);
-          }
-          
-          // 根據結果處理數據
-          if(result.code === 0){
-            const user = result.data;
-            // 1.將user保存到vuex的state
-            this.$store.dispatch('recordUser',user);
-            // 2.跳轉到個人中心
-            this.$router.replace('/profile')
-          }else{
-            // 顯示新的驗證碼
-            this.getCaptcha();
-            this.captcha = '';
-            this.showAlertText(result.msg);
-          }
-        },
-
-        // 相應提示框自定義事件(關閉提升框)
-        closeTip(){
-          this.showAlert = false;
-          this.alertText = '';
-        },
-
-        // 獲取圖片驗證碼
-        getCaptcha(){
-          // 注意：使用src不會觸發跨域
-          this.$refs.captcha.src = 'http://localhost:4000/captcha?time=' + Date.now();
-        }
-    },
-    components:{
-      AlertTip
+  data () {
+    return {
+      loginWay: true, // true为短信，false为密码
+      phone: '', // 手机号
+      computeTime: 0, // 倒计时时间
+      showPWD: false, // 是否显示密码
+      pwd: '', // 密码
+      code: '', // 短信验证码
+      name: '', // 用户名
+      captcha: '', // 图片验证码
+      alertText: '', // 提示信息
+      showAlert: false // 是否显示提示
     }
+  },
+  computed: {
+    rightPhone () {
+      return /^1\d{10}$/.test(this.phone)
+    }
+  },
+  methods: {
+    // 回退功能
+    goback () {
+      this.$router.back()
+    },
+
+    // 异步获取验证码功能
+    async getCode () {
+      // 当前没有开始计时
+      if (!this.computeTime) {
+        // 启动倒计时
+        this.computeTime = 30
+        this.intervalID = setInterval(() => {
+          this.computeTime--
+          if (this.computeTime <= 0) {
+            clearInterval(this.intervalID)
+          }
+        }, 1000)
+        // 发送请求
+        const result = await reqSendCode(this.phone)
+        if (result.code === 1) {
+          // 顯示提示
+          this.showAlertText(result.msg)
+          // 停止計時
+          if (this.computeTime) {
+            this.computeTime = 0
+            clearInterval(this.intervalID)
+          }
+        }
+      }
+    },
+
+    // 验证方法
+    showAlertText (alertText) {
+      this.showAlert = true
+      this.alertText = alertText
+    },
+    // 异步登录并验证表单数据
+    async login () {
+      let result
+      // 判断登录方式
+      if (this.loginWay) { // 短信
+        const { rightPhone, phone, code } = this
+        if (!rightPhone) {
+          // 手机号不正确
+          this.showAlertText('手机号不正确')
+          return
+        } else if (!/^\d{6}$/.test(code)) {
+          // 验证码必须为6位数字
+          this.showAlertText('验证码必须为6位数字')
+          return
+        }
+        // 發送ajax請求短信登陸
+        result = await reqSmsLogin(phone, code)
+      } else { // 密码
+        const { name, pwd, captcha } = this
+        if (!name) {
+          // 用户名不能为空
+          this.showAlertText('用户名不能为空')
+          return
+        } else if (!pwd) {
+          // 密码不能为空
+          this.showAlertText('密码不能为空')
+          return
+        } else if (!captcha) {
+          // 验证码不能为空
+          this.showAlertText('验证码不能为空')
+          return
+        }
+        // 發送ajax請求驗證碼登陸
+        result = await reqPwdLogin({ name, pwd, captcha })
+      }
+      // 停止計時
+      if (this.computeTime) {
+        this.computeTime = 0
+        clearInterval(this.intervalID)
+      }
+
+      // 根據結果處理數據
+      if (result.code === 0) {
+        const user = result.data
+        // 1.將user保存到vuex的state
+        this.$store.dispatch('recordUser', user)
+        // 2.跳轉到個人中心
+        this.$router.replace('/profile')
+      } else {
+        // 顯示新的驗證碼
+        this.getCaptcha()
+        this.captcha = ''
+        this.showAlertText(result.msg)
+      }
+    },
+
+    // 相應提示框自定義事件(關閉提升框)
+    closeTip () {
+      this.showAlert = false
+      this.alertText = ''
+    },
+
+    // 獲取圖片驗證碼
+    getCaptcha () {
+      // 注意：使用src不會觸發跨域
+      this.$refs.captcha.src = 'http://47.243.23.88:4000/captcha?time=' + Date.now()
+    }
+  },
+  components: {
+    AlertTip
+  }
 }
 </script>
 

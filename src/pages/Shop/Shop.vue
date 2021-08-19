@@ -19,15 +19,14 @@
     </div>
 </template>
 <script>
-import ShopHeader from '../../components/ShopHeader/ShopHeader';
+import ShopHeader from '../../components/ShopHeader/ShopHeader'
 export default {
-    mounted(){
-        this.$store.dispatch('getShopInfo');
-    },
-    components:{
-        ShopHeader
-    }
-
+  mounted () {
+    this.$store.dispatch('getShopInfo')
+  },
+  components: {
+    ShopHeader
+  }
 }
 </script>
 

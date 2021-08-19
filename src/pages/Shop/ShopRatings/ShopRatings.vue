@@ -71,58 +71,59 @@
   </div>
 </template>
 <script>
-import BScroll from 'better-scroll';
-import Star from '../../../components/Star/Star';
-import {mapState,mapGetters} from 'vuex';
+import BScroll from 'better-scroll'
+import Star from '../../../components/Star/Star'
+import { mapState, mapGetters } from 'vuex'
 export default {
-    data(){
-        return{
-            onlyShowText:true, //是否只显示有文本内容的评论
-            selectType:2, //选择显示的评价类型(0满意，1不满意，2全部)
-        }
-    },
-    methods:{
-        setSelectType(selectType){
-            this.selectType = selectType;
-        },
-        toggleOnlyShowText(){
-            this.onlyShowText = !this.onlyShowText;
-        }
-    },
-    mounted(){
-        this.$store.dispatch('getShopRatings',()=>{
-            this.$nextTick(()=>{
-                new BScroll(this.$refs.ratings,{
-                    click:true
-                })
-            })
-        })
-    },
-    computed:{
-        ...mapState(['info','ratings']),
-        ...mapGetters(['positiveSize']),
-        filterRatings(){
-            const {ratings,onlyShowText,selectType} = this;
-            return ratings.filter(rating=>{
-                const {rateType,text} = rating;
-                /**
-                 * 条件1：
-                 *  selectType:0/1/2 === rateType:0/1
-                 *  selectType === 2 (直接显示全部) || selectType === rateType
-                 * 
-                 * 条件2：
-                 *  onlyShowText:true/false === text:有值/没值
-                 *  onlyShowText:false === !onlyShowText(全部显示，不过有无文本,例如为false，那么!完后为true，|| 后面的就不用看了)
-                 *  onlyShowText:true === text.length > 0
-                 *  !onlyShowText || text.length > 0
-                 */
-                return (selectType === 2 || selectType === rateType) && (!onlyShowText || text.length > 0)
-            })
-        }
-    },
-    components:{
-        Star
+  data () {
+    return {
+      onlyShowText: true, // 是否只显示有文本内容的评论
+      selectType: 2 // 选择显示的评价类型(0满意，1不满意，2全部)
     }
+  },
+  methods: {
+    setSelectType (selectType) {
+      this.selectType = selectType
+    },
+    toggleOnlyShowText () {
+      this.onlyShowText = !this.onlyShowText
+    }
+  },
+  mounted () {
+    this.$store.dispatch('getShopRatings', () => {
+      this.$nextTick(() => {
+        // eslint-disable-next-line no-new
+        new BScroll(this.$refs.ratings, {
+          click: true
+        })
+      })
+    })
+  },
+  computed: {
+    ...mapState(['info', 'ratings']),
+    ...mapGetters(['positiveSize']),
+    filterRatings () {
+      const { ratings, onlyShowText, selectType } = this
+      return ratings.filter(rating => {
+        const { rateType, text } = rating
+        /**
+         * 条件1：
+         *  selectType:0/1/2 === rateType:0/1
+         *  selectType === 2 (直接显示全部) || selectType === rateType
+         *
+         * 条件2：
+         *  onlyShowText:true/false === text:有值/没值
+         *  onlyShowText:false === !onlyShowText(全部显示，不过有无文本,例如为false，那么!完后为true，|| 后面的就不用看了)
+         *  onlyShowText:true === text.length > 0
+         *  !onlyShowText || text.length > 0
+         */
+        return (selectType === 2 || selectType === rateType) && (!onlyShowText || text.length > 0)
+      })
+    }
+  },
+  components: {
+    Star
+  }
 }
 </script>
 

@@ -1,14 +1,14 @@
 <template>
 <footer class="footer_guide">
-    <span class="guide_item" 
-        :class="{on:'/msite' === $route.path}" 
+    <span class="guide_item"
+        :class="{on:'/msite' === $route.path}"
         @click="goto('/msite')">  <!--路由跳转-->
       <span class="item_icon">
         <i class="iconfont icon-U"></i>
       </span>
       <span>外卖</span>
     </span>
-    <span class="guide_item" 
+    <span class="guide_item"
         :class="{on:'/search' === $route.path}"
         @click="goto('/search')">
       <span class="item_icon">
@@ -16,7 +16,7 @@
       </span>
       <span>搜索</span>
     </span>
-    <span class="guide_item" 
+    <span class="guide_item"
         :class="{on:'/order' === $route.path}"
         @click="goto('/order')">
       <span class="item_icon">
@@ -24,7 +24,7 @@
       </span>
       <span>订单</span>
     </span>
-    <span class="guide_item" 
+    <span class="guide_item"
         :class="{on:'/profile' === $route.path}"
         @click="goto('/profile')">
       <span class="item_icon">
@@ -37,11 +37,11 @@
 
 <script>
 export default {
-    methods:{
-        goto(path){
-            this.$router.replace(path);
-        }
+  methods: {
+    goto (path) {
+      this.$router.replace(path)
     }
+  }
 }
 </script>
 

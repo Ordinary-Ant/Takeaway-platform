@@ -28,24 +28,24 @@
 </template>
 
 <script>
-import CartControl from '../CartControl/CartControl';
+import CartControl from '../CartControl/CartControl'
 export default {
-    props:{
-        food:Object
-    },
-    data(){
-        return{
-            isShow:false
-        }
-    },
-    methods:{
-        toggleShow(){
-            this.isShow = !this.isShow;
-        }
-    },
-    components:{
-        CartControl
+  props: {
+    food: Object
+  },
+  data () {
+    return {
+      isShow: false
     }
+  },
+  methods: {
+    toggleShow () {
+      this.isShow = !this.isShow
+    }
+  },
+  components: {
+    CartControl
+  }
 }
 </script>
 

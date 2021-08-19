@@ -55,49 +55,51 @@
   </div>
 </template>
 <script>
-import {mapState} from 'vuex';
-import BScroll from 'better-scroll';
+import {mapState} from 'vuex'
+import BScroll from 'better-scroll'
 export default {
-    data(){
-        return{
-            supportClasses:['activity-green','activity-red','activity-orange']
-        }
-    },
-    computed:{
-        ...mapState(['info'])
-    },
-    mounted(){
-        // 如果是直接在此页面刷新，那么info中的某些深层数据是underfine，所以需要判断下
-        if(!this.info.pics){
-            return
-        }
-        // 数据有了
-        this._initScroll()
-    },
-    watch:{
-        info(){ 
-            this.$nextTick(()=>{
-                this._initScroll();
-            })
-        }
-    },
-    methods:{
-        _initScroll(){
-            new BScroll('.shop-info',{
-            click:true
-            });
-
-            // 计算ul宽度
-            const ul = this.$refs.picsUl
-            const liw = 120;
-            const space = 6;
-            const count = this.info.pics.length;
-            ul.style.width = count * (liw + space) - space + 'px';
-            new BScroll('.pic-wrapper',{
-                scrollX:true //水平滑动
-            });
-        }
+  data () {
+    return {
+      supportClasses: ['activity-green', 'activity-red', 'activity-orange']
     }
+  },
+  computed: {
+    ...mapState(['info'])
+  },
+  mounted () {
+    // 如果是直接在此页面刷新，那么info中的某些深层数据是underfine，所以需要判断下
+    if (!this.info.pics) {
+      return
+    }
+    // 数据有了
+    this._initScroll()
+  },
+  watch: {
+    info () {
+      this.$nextTick(() => {
+        this._initScroll()
+      })
+    }
+  },
+  methods: {
+    _initScroll () {
+      // eslint-disable-next-line no-new
+      new BScroll('.shop-info', {
+        click: true
+      })
+
+      // 计算ul宽度
+      const ul = this.$refs.picsUl
+      const liw = 120
+      const space = 6
+      const count = this.info.pics.length
+      ul.style.width = count * (liw + space) - space + 'px'
+      // eslint-disable-next-line no-new
+      new BScroll('.pic-wrapper', {
+        scrollX: true // 水平滑动
+      })
+    }
+  }
 }
 </script>
 
@@ -210,8 +212,6 @@ export default {
             color #333
           &:last-child
             border-none()
-
-
     .split
       width: 100%
       height: 16px

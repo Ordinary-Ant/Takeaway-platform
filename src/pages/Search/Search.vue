@@ -31,39 +31,39 @@
 </template>
 
 <script>
-import HeaderTop from '../../components/HeaderTop/HeaderTop';
-import {mapState} from 'vuex';
+import HeaderTop from '../../components/HeaderTop/HeaderTop'
+import {mapState} from 'vuex'
 export default {
-    data(){ 
-      return{
-        keyword:'',
-        imgBaseUrl:'http://cangdu.org:8001/img/',
-        noSearchShops:false
-      }
-    },
-    methods:{
-      search(){
-        const keyword = this.keyword.trim();
-        if(keyword){
-          this.$store.dispatch('getSearchShops',keyword);
-        }
-      }
-    },
-    computed:{
-      ...mapState(['searchShops'])
-    },
-    watch:{
-      searchShops(value){
-        if(!value.length){
-          this.noSearchShops = true;
-        }else{
-          this.noSearchShops = false;
-        }
-      }
-    },
-    components:{
-        HeaderTop
+  data () {
+    return {
+      keyword: '',
+      imgBaseUrl: 'http://cangdu.org:8001/img/',
+      noSearchShops: false
     }
+  },
+  methods: {
+    search () {
+      const keyword = this.keyword.trim()
+      if (keyword) {
+        this.$store.dispatch('getSearchShops', keyword)
+      }
+    }
+  },
+  computed: {
+    ...mapState(['searchShops'])
+  },
+  watch: {
+    searchShops (value) {
+      if (!value.length) {
+        this.noSearchShops = true
+      } else {
+        this.noSearchShops = false
+      }
+    }
+  },
+  components: {
+    HeaderTop
+  }
 }
 </script>
 

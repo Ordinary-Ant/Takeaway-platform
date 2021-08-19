@@ -43,82 +43,82 @@
 </template>
 
 <script>
-import {mapState,mapGetters} from 'vuex';
-import BScroll from 'better-scroll';
-import CartControl from '../CartControl/CartControl';
-import {MessageBox,Toast} from 'mint-ui';
+import {mapState, mapGetters} from 'vuex'
+import BScroll from 'better-scroll'
+import CartControl from '../CartControl/CartControl'
+import {MessageBox, Toast} from 'mint-ui'
+let scroll = null
 export default {
-    data(){
-        return{
-            isShow:false
-        }
+  data () {
+    return {
+      isShow: false
+    }
+  },
+  components: {
+    CartControl
+  },
+  computed: {
+    ...mapState(['cartFoods', 'info']),
+    ...mapGetters(['totalCount', 'totalPrice']),
+    payClass () {
+      const { totalPrice } = this
+      const { minPrice } = this.info
+      return totalPrice >= minPrice ? 'enough' : 'no-enough'
     },
-    components:{
-        CartControl
+    payText () {
+      const { totalPrice } = this
+      const { minPrice } = this.info
+      if (totalPrice === 0) {
+        return `￥${minPrice}元起送`
+      } else if (totalPrice < minPrice) {
+        return `还差￥${minPrice - totalPrice}元起送`
+      } else {
+        return '结算'
+      }
     },
-    computed:{
-        ...mapState(['cartFoods','info']),
-        ...mapGetters(['totalCount','totalPrice']),
-        payClass(){
-            const {totalPrice} = this;
-            const {minPrice} = this.info;
-            return totalPrice >= minPrice ? 'enough' : 'no-enough'
-        },
-        payText(){
-            const {totalPrice} = this;
-            const {minPrice} = this.info;
-            if(totalPrice === 0){
-                return `$${minPrice}元起送`
-            }else if(totalPrice < minPrice){
-                return `还差$${minPrice - totalPrice}元起送`
-            }else{
-                return '结算';
-            }
-        },
-        listShow(){
-            // 如果总数量为空,直接不显示
-            if(this.totalCount === 0){
-                this.isShow = false;
-                return false;
-            }
-            if(this.isShow){
-              this.$nextTick(()=>{
-                // 为防止多次显示隐藏带来多次创建BScroll对象，所以使用单例解决
-                if(!this.scroll){ 
-                  this.scroll = new BScroll('.list-content',{
-                    click:true
-                  })
-                }else{
-                  this.scroll.refresh() //刷新，让滚动条重新计算高度
-                }
-              })
-            }
-            return this.isShow
-        }
-    },
-    methods:{
-        toggleShow(){
-            // 只有当数量>0才会被触发
-            if(this.totalCount > 0){
-                this.isShow = !this.isShow;
-            }
-        },
-        clearCart(){
-          MessageBox.confirm('確認要清空嗎？').then(
-          // 點擊確認
-          action=>{
-            this.$store.dispatch('clearCart');
-            Toast('清空成功');
-          },
-          // 點擊取消
-          esc=>{
-            console.log('取消了');
+    listShow () {
+      let isShow = this.isShow
+      // 如果总数量为空,直接不显示
+      if (this.totalCount === 0) {
+        isShow = false
+      }
+      if (isShow) {
+        this.$nextTick(() => {
+          // 为防止多次显示隐藏带来多次创建BScroll对象，所以使用单例解决
+          if (!scroll) {
+            scroll = new BScroll('.list-content', {
+              click: true
+            })
+          } else {
+            scroll.refresh() // 刷新，让滚动条重新计算高度
           }
-        )
+        })
+      }
+      return isShow
+    }
+  },
+  methods: {
+    toggleShow () {
+      // 只有当数量>0才会被触发
+      if (this.totalCount > 0) {
+        this.isShow = !this.isShow
+      }
+    },
+    clearCart () {
+      MessageBox.confirm('確認要清空嗎？').then(
+        // 點擊確認
+        action => {
+          this.$store.dispatch('clearCart')
+          Toast('清空成功')
+        },
+        // 點擊取消
+        esc => {
+          console.log('取消了')
         }
+      )
     }
   }
-
+}
 </script>
 
 <style lang="stylus" rel="stylesheet/stylus" scoped>

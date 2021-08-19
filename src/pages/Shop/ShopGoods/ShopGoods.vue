@@ -50,107 +50,107 @@
 </template>
 <script>
 // 此爲下拉組件
-import BScroll from 'better-scroll';
-import {mapState} from 'vuex';
-import CartControl from '../../../components/CartControl/CartControl';
-import Food from '../../../components/Food/Food';
-import ShopCart from '../../../components/ShopCart/ShopCart';
+import BScroll from 'better-scroll'
+import {mapState} from 'vuex'
+import CartControl from '../../../components/CartControl/CartControl'
+import Food from '../../../components/Food/Food'
+import ShopCart from '../../../components/ShopCart/ShopCart'
 export default {
-    data(){
-      return{
-        // 右側滑動的Y坐標(滑動過程實時變化)
-        scrollY:0,
-        // 所有右側分類li的top組成的數組(列表第一次顯示后不再變化)
-        tops:[],
-        food:{} //food组件需要的对象
-      }
-    },
-    mounted(){
-        this.$store.dispatch('getShopGoods',()=>{ //數據更新完畢
-          this.$nextTick(()=>{ //列表數據更新顯示后
-            // 初始化滾動條
-            this._initScroll();
-            // 初始化tops
-            this._initTops();
-          })
-        });
-    },
-    computed:{ // 計算屬性是在初始時和相關數據發生變化時觸發
-        ...mapState(['goods']),
-        // 計算得到當前分類的下標
-        currentIndex(){
-          // 得到條件數據
-          const {scrollY,tops} = this;
-          // 根據條件計算產生結果
-          // findIndex()遍歷數組找到對應的下標
-          const index = tops.findIndex((top,index)=>{
-            // 當前高度必須存在兩個類別模塊之間
-            return scrollY >= top && scrollY < tops[index + 1]
-          })
-          // 返回結果
-          return index;
-        }
-    },
-    methods:{
-      // 初始化滾動條
-      _initScroll(){
-        // 創建滾動條
-        new BScroll('.menu-wrapper',{
-          click:true
-        });
-        this.foodScroll = new BScroll('.foods-wrapper',{
-          probeType:2,
-          click:true
-        });
-        // 為右側列表綁定scroll監聽
-        // 需要在BScroll對象中添加上probeType選項，此選項有三個值：1(非實時派發scroll) 2(在屏幕滑動過程之實時派發scroll) 3(不管是否滑動都會實時派發scorll)
-        this.foodScroll.on('scroll',({x,y})=>{ //x和y為坐標
-          this.scrollY = Math.abs(y)
-        })
-        // 為右側列表綁定scroll結束的監聽
-        this.foodScroll.on('scrollEnd',({x,y})=>{ //x和y為坐標
-          this.scrollY = Math.abs(y)
-        })
-      },
-      // 初始化tops
-      _initTops(){
-        const tops = [];
-        let top = 0;
-        tops.push(top);
-        
-        const lis = this.$refs.foodsUl.querySelectorAll('.food-list-hook');
-        Array.prototype.slice.call(lis).forEach(li => {
-          top += li.clientHeight;
-          tops.push(top); 
-        });
-
-        this.tops = tops;
-      },
-
-      // 左側列表事件監聽
-      clickMenuItem(index){
-        // 使右側列表滑動到指定位置
-        // 得到目標位置
-        const y = this.tops[index];
-        // 立即更新top位置
-        this.scrollY = y;
-        // 滑動右側列表
-        this.foodScroll.scrollTo(0,-y,300);
-      },
-
-      // 显示food
-      showFood(food){
-        // 设置food
-        this.food = food;
-        // 显示food(父组件需要调用子组件的显示方法)
-        this.$refs.food.toggleShow()
-      }
-    },
-    components:{
-      CartControl,
-      Food,
-      ShopCart
+  data () {
+    return {
+      // 右側滑動的Y坐標(滑動過程實時變化)
+      scrollY: 0,
+      // 所有右側分類li的top組成的數組(列表第一次顯示后不再變化)
+      tops: [],
+      food: {} // food组件需要的对象
     }
+  },
+  mounted () {
+    this.$store.dispatch('getShopGoods', () => { // 數據更新完畢
+      this.$nextTick(() => { // 列表數據更新顯示后
+        // 初始化滾動條
+        this._initScroll()
+        // 初始化tops
+        this._initTops()
+      })
+    })
+  },
+  computed: { // 計算屬性是在初始時和相關數據發生變化時觸發
+    ...mapState(['goods']),
+    // 計算得到當前分類的下標
+    currentIndex () {
+      // 得到條件數據
+      const {scrollY, tops} = this
+      // 根據條件計算產生結果
+      // findIndex()遍歷數組找到對應的下標
+      const index = tops.findIndex((top, index) => {
+        // 當前高度必須存在兩個類別模塊之間
+        return scrollY >= top && scrollY < tops[index + 1]
+      })
+      // 返回結果
+      return index
+    }
+  },
+  methods: {
+    // 初始化滾動條
+    _initScroll () {
+      // 創建滾動條
+      // eslint-disable-next-line no-new
+      new BScroll('.menu-wrapper', {
+        click: true
+      })
+      this.foodScroll = new BScroll('.foods-wrapper', {
+        probeType: 2,
+        click: true
+      })
+      // 為右側列表綁定scroll監聽
+      // 需要在BScroll對象中添加上probeType選項，此選項有三個值：1(非實時派發scroll) 2(在屏幕滑動過程之實時派發scroll) 3(不管是否滑動都會實時派發scorll)
+      this.foodScroll.on('scroll', ({ x, y }) => { // x和y為坐標
+        this.scrollY = Math.abs(y)
+      })
+      // 為右側列表綁定scroll結束的監聽
+      this.foodScroll.on('scrollEnd', ({ x, y }) => { // x和y為坐標
+        this.scrollY = Math.abs(y)
+      })
+    },
+    // 初始化tops
+    _initTops () {
+      const tops = []
+      let top = 0
+      tops.push(top)
+      const lis = this.$refs.foodsUl.querySelectorAll('.food-list-hook')
+      Array.prototype.slice.call(lis).forEach(li => {
+        top += li.clientHeight
+        tops.push(top)
+      })
+
+      this.tops = tops
+    },
+
+    // 左側列表事件監聽
+    clickMenuItem (index) {
+      // 使右側列表滑動到指定位置
+      // 得到目標位置
+      const y = this.tops[index]
+      // 立即更新top位置
+      this.scrollY = y
+      // 滑動右側列表
+      this.foodScroll.scrollTo(0, -y, 300)
+    },
+
+    // 显示food
+    showFood (food) {
+      // 设置food
+      this.food = food
+      // 显示food(父组件需要调用子组件的显示方法)
+      this.$refs.food.toggleShow()
+    }
+  },
+  components: {
+    CartControl,
+    Food,
+    ShopCart
+  }
 }
 </script>
 

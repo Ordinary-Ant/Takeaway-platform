@@ -1,42 +1,41 @@
 <template>
   <div class="star" :class="'star-' + size">
-    <span class="star-item" v-for="(sc,index) in starClasses" :class="sc"></span>
+    <span class="star-item" v-for="(sc,index) in starClasses" :class="sc" :key="index"></span>
   </div>
 </template>
 
 <script>
-const CLASS_ON = 'on';
-const CLASS_HALF = 'half';
-const CLASS_OFF = 'off';
+const CLASS_ON = 'on'
+const CLASS_HALF = 'half'
+const CLASS_OFF = 'off'
 export default {
-    props:{
-        score:Number,
-        size:Number
-    },
-    computed:{
-        starClasses(){
-            // 例子：3.2：3个on + 0个half + 2个off
-            const {score} = this;
-            const scs = [];
-            
-            // 向scs中添加n个'on'
-            // 向下取整
-            const scoreInt = Math.floor(score);
-            for(let i = 0;i < scoreInt;i++){
-                scs.push(CLASS_ON);
-            }
-            // 向scs中添加0/1个'half'
-            if(score*10 - scoreInt*10 >= 5){
-                scs.push(CLASS_HALF);
-            }
-            // 向scs中添加个'off'
-            while(scs.length < 5){
-                scs.push(CLASS_OFF);
-            }
-            return scs;
-        }
+  props: {
+    score: Number,
+    size: Number
+  },
+  computed: {
+    starClasses () {
+      // 例子：3.2：3个on + 0个half + 2个off
+      const {score} = this
+      const scs = []
+      // 向scs中添加n个'on'
+      // 向下取整
+      const scoreInt = Math.floor(score)
+      for (let i = 0; i < scoreInt; i++) {
+        scs.push(CLASS_ON)
+      }
+      // 向scs中添加0/1个'half'
+      if (score * 10 - scoreInt * 10 >= 5) {
+        scs.push(CLASS_HALF)
+      }
+      // 向scs中添加个'off'
+      while (scs.length < 5) {
+        scs.push(CLASS_OFF)
+      }
+      return scs
     }
-};
+  }
+}
 </script>
 
 <style>
